@@ -1,0 +1,38 @@
+#To run mvn command in MAC, you need to run these 3 commands to add maven to Path
+M2_HOME="/Users/satyam/Documents/development-tools/apache-maven-3.9.6"
+PATH="${M2_HOME}/bin:${PATH}"
+export PATH
+#Steps to create docker image of this application
+#build docker image command on root directory
+mvn spring-boot:build-image -D spring-boot.build-image.imageName=<IMAGE-NAME>
+#Run docker image
+docker run -it -d -p <host-port>:<container-port> <name> <image>
+docker run -it -d -p 8080:8080 satyamg650/company-review-app-image
+#check logs of running container with container id
+docker logs 9249ddb29212
+#get all running containers
+docker ps
+#stop a running container
+docker stop 9249ddb29212
+#run postgres container
+docker run -d --name db -e POSTGRES_PASSWORD=satyam postgres
+#run pgadmin for postgres
+docker run -d --name pgadmin -e PGADMIN_DEFAULT_EMAIL=satyamg650@gmail.com -e PGADMIN_DEFAULT_PASSWORD=satyam dpage/pgadmin4
+#check reachability
+docker exec -it ping db
+#remove both the containers
+docker rm -f db pgadmin
+#check running containers
+docker ps
+#create a docker network
+docker network create my-network
+#run postgres container with network
+docker run -d --name db --network my-network -e POSTGRES_PASSWORD=satyam postgres
+#run pgadmin with network
+docker run -d --name pgadmin --network my-network -e PGADMIN_DEFAULT_EMAIL=satyamg650@gmail.com -e PGADMIN_DEFAULT_PASSWORD=satyam dpage/pgadmin4
+#now run ping command(network will be reachable this time)
+docker exec -it pgadmin ping db
+#add docker-compose.yml file and run below command in detach mode(with -d)
+docker compose up -d
+
+
